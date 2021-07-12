@@ -32,7 +32,7 @@ static uint8_t BIOS[0x100] = {
 typedef struct mmu_t 
 {
     uint8_t memory[0x10000]; // 0xFFFF + 0x0001
-    bool finished_bios;
+    bool bios_loaded;
 } mmu_t;
 
 mmu_t * mmu_create();

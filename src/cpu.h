@@ -33,8 +33,16 @@ typedef struct cpu_t
 typedef struct opfunc_t
 {
      void (*func)(cpu_t *cpu, mmu_t *mmu);
-     uint8_t bytes; // The opcode size + any extra offset (eg data that can folow opcode)
+     // The opcode size + any extra offset 
+     // (eg data that can folow opcode)
+     uint8_t bytes;
+     // The amount of cpu ticks this instruction takes
      uint8_t cycles;
+     // The amount to increment the PC with,
+     // Which can differ from bytes, as jumps will set the
+     // value of the pc directly, negating the required
+     // addition of the bytes value
+     uint8_t increment;
 } opfunc_t;
 
 cpu_t * cpu_create();

@@ -4,5 +4,4 @@
 #include "cpu.h"
 #include "mmu.h"
 
-void run_simulation(cpu_t *cpu, mmu_t *mmu);
 #endif

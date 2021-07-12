@@ -37,18 +37,20 @@ void cpu_tick(cpu_t *cpu, mmu_t *mmu)
     if (!op || !op->func)
     {
         char msg[0xFF];
-        snprintf(msg, 0xFF, "Failed to decode: 0x%04x", mmu_read_byte(mmu, cpu->reg.pc.value));
+        snprintf(msg, 0xFF, "Failed to decode: 0x%04x", 
+            mmu_read_byte(mmu, cpu->reg.pc.value));
         log_debug(msg);
         cpu->reg.pc.value++;
+        cpu->tick = 1;
         return;
     }
     // Execute instruction
     op->func(cpu, mmu);
 
-    cpu->tick += op->cycles;
+    cpu->tick = op->cycles;
 
-    // Execute instruction
-    cpu->reg.pc.value += op->bytes; // Increment pc by 1, as each instruction is at least 1 byte
+    // Adjust pc to amount of bytes this op took
+    cpu->reg.pc.value += op->increment;
 }
 
 opfunc_t *cpu_load_op(cpu_t *cpu, mmu_t *mmu)
@@ -56,7 +58,9 @@ opfunc_t *cpu_load_op(cpu_t *cpu, mmu_t *mmu)
     const uint8_t op = mmu_read_byte(mmu, cpu->reg.pc.value);
     opfunc_t *opfunc = &cpu_opcodes[op];
 
-    if (op == 0x7C) {
+
+    if (op == 0x7C /*halt*/) {
+        // TODO implement halpt, stop etc.
         uint8_t i = 0;
     }
     
